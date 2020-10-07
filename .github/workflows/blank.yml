@@ -1,33 +1,23 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+var httpClient = new HttpClient();
+httpClient.DefaultRequestHeaders.UserAgent.Add(
+    new ProductInfoHeaderValue("MyApplication", "1"));
+var repo = "quirozmf/chagoz";
+var contentsUrl = $"https://api.github.com/repos/{repo}/contents";
+var contentsJson = await httpClient.GetStringAsync(contentsUrl);
+var contents = (JArray)JsonConvert.DeserializeObject(contentsJson);
+foreach(var file in contents)
+{
+    var fileType = (string)file["type"];
+    if (fileType == "dir")
+    {
+        var directoryContentsUrl = (string)file["url"];
+        // use this URL to list the contents of the folder
+        Console.WriteLine($"DIR: {directoryContentsUrl}");
+    }
+    else if (fileType == "file")
+    {
+        var downloadUrl = (string)file["download_url"];
+        // use this URL to download the contents of the file
+        Console.WriteLine($"DOWNLOAD: {downloadUrl}");
+    }
+}
