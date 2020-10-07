@@ -17,7 +17,6 @@ foreach(var file in contents)
     else if (fileType == "file")
     {
         var downloadUrl = (string)file["download_url"];
-        // use this URL to download the contents of the file
         Console.WriteLine($"DOWNLOAD: {downloadUrl}");
     }
 }
